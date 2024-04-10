@@ -1,1 +1,1 @@
-Template used: https://github.com/codewithsadee/vcard-personal-portfolio
+Template used (with some modifications): https://github.com/codewithsadee/vcard-personal-portfolio
