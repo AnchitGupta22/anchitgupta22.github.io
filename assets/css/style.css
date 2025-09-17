@@ -131,11 +131,23 @@ li { list-style: none; }
 
 img, ion-icon, a, button, time, span { display: block; }
 
-a.inline-bold {
-  display: inline;
-  font-weight: bold;
-  color: inherit;
-  text-decoration: none;
+/* Inline bold link for consistent appearance across browsers */
+a.inline-bold,
+a.inline-bold:link,
+a.inline-bold:visited,
+a.inline-bold:hover,
+a.inline-bold:active {
+  display: inline;           /* stay inline */
+  font-weight: bold;         /* bold text */
+  color: inherit;            /* inherit text color */
+  text-decoration: none;     /* remove underline */
+  cursor: pointer;           /* show pointer on hover */
+}
+
+/* Optional hover effect to indicate it’s clickable */
+a.inline-bold:hover {
+  text-decoration: underline;        /* underline on hover */
+  color: var(--orange-yellow-crayola); /* highlight color on hover */
 }
 
 
