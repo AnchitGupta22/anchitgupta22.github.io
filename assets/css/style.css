@@ -374,6 +374,33 @@ main {
   border-radius: 8px;
 }
 
+.info-content .title + .title {
+margin-top: 8px;
+}
+
+.info-content .job-open {
+border: 1px solid transparent;
+animation: jobOpenPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes jobOpenPulse {
+0%, 100% {
+border-color: transparent;
+box-shadow: 0 0 0 0 hsla(45, 100%, 72%, 0);
+}
+50% {
+border-color: var(--orange-yellow-crayola);
+box-shadow: 0 0 0 3px hsla(45, 100%, 72%, 0.18);
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+.info-content .job-open {
+animation: none;
+border-color: var(--orange-yellow-crayola);
+}
+}
+
 .info_more-btn {
   position: absolute;
   top: -15px;
