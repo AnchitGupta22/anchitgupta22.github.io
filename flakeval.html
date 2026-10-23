@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flakeval: check whether an AI improvement is real, or just luck.">
+  <title>Flakeval | Anchit Gupta</title>
+  <link rel="shortcut icon" href="./assets/images/logo2.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      color: var(--light-gray);
+      font-family: var(--ff-poppins);
+      background: var(--smoky-black);
+    }
+
+    .flakeval-layout {
+      width: min(100% - 30px, 1200px);
+      margin: 30px auto;
+      display: block;
+    }
+
+    .portfolio-link {
+      position: fixed;
+      z-index: 10;
+      top: 50%;
+      right: 4px;
+      display: block;
+      padding: 16px 11px;
+      color: var(--orange-yellow-crayola);
+      font-size: 13px;
+      background: var(--border-gradient-onyx);
+      border-radius: 12px;
+      box-shadow: var(--shadow-2);
+      writing-mode: vertical-rl;
+      transform: translateY(-50%);
+      transition: background var(--transition-1), color var(--transition-1);
+    }
+
+    .portfolio-link::before {
+      position: absolute;
+      z-index: -1;
+      inset: 1px;
+      border-radius: inherit;
+      background: var(--bg-gradient-jet);
+      content: "";
+    }
+
+    .portfolio-link:hover,
+    .portfolio-link:focus {
+      color: var(--white-2);
+      background: var(--bg-gradient-yellow-1);
+    }
+
+    .readme-article {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      min-height: 100%;
+      padding: clamp(22px, 4vw, 42px);
+      background: var(--eerie-black-2);
+      border: 1px solid var(--jet);
+      border-radius: 20px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .readme-article article {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      overflow: visible;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .readme-content {
+      color: var(--light-gray);
+      font-size: 14px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .readme-content > :first-child { margin-top: 0; }
+
+    .readme-content h1, .readme-content h2, .readme-content h3,
+    .readme-content h4, .readme-content h5, .readme-content h6 {
+      color: var(--white-2);
+      font-weight: var(--fw-500);
+      line-height: 1.45;
+    }
+
+    .readme-content h1 { font-size: clamp(26px, 4vw, 36px); }
+
+    .readme-content h2 {
+      margin-top: 2em;
+      padding-bottom: 9px;
+      border-bottom: 1px solid var(--jet);
+      font-size: 23px;
+    }
+
+    .readme-content h3 { margin-top: 1.6em; font-size: 18px; }
+    .readme-content p { margin: 1em 0; }
+    .readme-content ul, .readme-content ol { padding-left: 24px; }
+    .readme-content li { margin: 5px 0; }
+    .readme-content li::marker { color: var(--orange-yellow-crayola); }
+
+    .readme-content h2#contents + ol {
+      padding-left: 28px;
+      list-style: decimal;
+    }
+
+    .readme-content h2#contents + ol > li {
+      display: list-item;
+      list-style: decimal;
+    }
+
+    .readme-content h2#roadmap + ul {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .readme-content h2#roadmap + ul > li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .readme-content h2#roadmap + ul input[type="checkbox"] {
+      display: inline-block;
+      flex: 0 0 auto;
+      width: 16px;
+      height: 16px;
+      margin: 5px 0 0;
+      accent-color: var(--orange-yellow-crayola);
+      cursor: pointer;
+    }
+
+    .readme-content a {
+      display: inline;
+      color: var(--orange-yellow-crayola);
+      text-decoration: none;
+    }
+
+    .readme-content a:hover { text-decoration: underline; }
+
+    .readme-content img {
+      display: inline-block;
+      max-width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+
+    .readme-content table {
+      display: block;
+      width: 100%;
+      margin: 1.25em 0;
+      overflow-x: auto;
+      border-collapse: collapse;
+    }
+
+    .readme-content th, .readme-content td {
+      min-width: 100px;
+      padding: 9px 11px;
+      text-align: left;
+      border: 1px solid var(--jet);
+    }
+
+    .readme-content th {
+      color: var(--white-2);
+      background: var(--onyx);
+    }
+
+    .readme-content tr:nth-child(even) { background: hsla(240, 2%, 18%, 0.45); }
+
+    .readme-content pre {
+      padding: 17px;
+      overflow: auto;
+      color: var(--light-gray);
+      background: var(--smoky-black);
+      border: 1px solid var(--jet);
+      border-radius: 10px;
+      line-height: 1.65;
+    }
+
+    .readme-content code, .readme-content pre {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .readme-content pre code.hljs {
+      display: block;
+      padding: 0;
+      overflow: visible;
+      color: inherit;
+      background: transparent;
+      white-space: pre;
+      tab-size: 4;
+    }
+
+    .readme-content pre code.hljs span { display: inline; }
+
+    .readme-content :not(pre) > code {
+      padding: 2px 6px;
+      color: var(--orange-yellow-crayola);
+      background: var(--onyx);
+      border-radius: 5px;
+    }
+
+    .readme-content blockquote {
+      margin: 1.4em 0;
+      padding: 2px 0 2px 16px;
+      color: var(--light-gray-70);
+      border-left: 3px solid var(--orange-yellow-crayola);
+    }
+
+    @media (max-width: 900px) {
+      .flakeval-layout {
+        width: min(100% - 24px, 760px);
+      }
+
+      .readme-article { padding: 24px; }
+    }
+
+    @media (max-width: 1320px) {
+      .readme-article { padding-right: 62px; }
+    }
+
+    @media (max-width: 520px) {
+      .flakeval-layout { width: min(100% - 20px, 480px); margin: 10px auto; }
+      .readme-article { padding: 19px 15px; }
+      .readme-article { padding-right: 54px; }
+      .portfolio-link { right: 4px; padding: 14px 9px; font-size: 11px; }
+      .readme-content { font-size: 13px; }
+      .readme-content h2 { font-size: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="flakeval-layout">
+    <section class="main-content readme-article">
+      <article>
+        <div class="readme-content">
+<p align="center">
+    <img src="./assets/images/flakeval_logo.png" alt="Logo" width="240">
+    <br>
+    <br>
+    <a href="https://github.com/AnchitGupta22/flakeval/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+    <a href="https://pypi.org/project/flakeval/"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/flakeval"></a>
+    <a href="https://pypi.org/project/flakeval/"><img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/flakeval"></a>
+    <a href="https://github.com/AnchitGupta22/flakeval/actions"><img alt="Tests" src="https://github.com/AnchitGupta22/flakeval/actions/workflows/tests.yml/badge.svg"></a>
+</p>
+
+<hr>
+<p><strong>Is your AI improvement real, or just luck?</strong></p>
+<p><em>(Say it "flake-eval": flaky + evaluation.)</em></p>
+<p>You change something (a prompt, a model, a setting). Your test score goes from 72% to 74%. Did it really get better, or would you get 74% just by running the same test again? <code>flakeval</code> answers that question with a plain verdict.</p>
+<ul>
+<li>Works on results you already have (a simple JSONL file), or runs your evaluation function repeatedly for you.</li>
+<li>Gives a verdict, a range for the true difference, and the <strong>smallest difference your test can reliably detect</strong>.</li>
+<li>Tells you whether you need <strong>more runs</strong> or <strong>more test questions</strong> to reach a clear answer.</li>
+<li>Exits with an error on a real regression, so it works as an automatic check in CI.</li>
+<li>One dependency (numpy). Runs even on a laptop.</li>
+</ul>
+<hr>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#flakeval-in-plain-english">Flakeval in plain English</a></li>
+<li><a href="#quick-start">Quick start</a></li>
+<li><a href="#use-it-with-your-own-models-and-data">Use it with your own models and data (the template)</a></li>
+<li><a href="#run-the-two-case-studies-through-the-template">The two case studies, as template settings files</a></li>
+<li><a href="#results">Results</a></li>
+<li><a href="#use-it-on-your-own-evals">Use it on your own evals</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#how-it-works">How it works</a></li>
+<li><a href="#limitations">Limitations</a></li>
+<li><a href="#repository-layout">Repository layout</a></li>
+<li><a href="#roadmap">Roadmap</a></li>
+</ol>
+<hr>
+<h2 id="flakeval-in-plain-english">Flakeval in plain English</h2>
+<h3 id="the-problem">The problem</h3>
+<p>If you flip a coin 10 times you might get 6 heads. Flip it 10 more times and you might get 4. Nobody concludes the coin changed. It is just chance.</p>
+<p>AI tests behave the same way. Language models pick words with some randomness, so running the <strong>same</strong> test twice can give <strong>different</strong> scores. On top of that, your test only has a limited number of questions, so a different set of questions would give yet another score. Together this random wobble is called <strong>noise</strong>.</p>
+<p>If you change a prompt and the score moves by 2 points, that could be a real improvement, or it could be noise. <code>flakeval</code> measures how big the noise is, so you can tell which it is and how much to trust the answer. (Isn't it all just chance anyway? See the <a href="#faq">FAQ</a>.)</p>
+<h3 id="words-used-in-this-project">Words used in this project</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Item</strong></td>
+<td>One test question.</td>
+</tr>
+<tr>
+<td><strong>Run</strong></td>
+<td>One complete pass of the model over all items. We repeat runs to see how much the score wobbles.</td>
+</tr>
+<tr>
+<td><strong>Score</strong></td>
+<td>How well the model did (for example, the share of questions answered correctly). A "point" is one percentage point.</td>
+</tr>
+<tr>
+<td><strong>Noise</strong></td>
+<td>Random wobble in scores that has nothing to do with real quality.</td>
+</tr>
+<tr>
+<td><strong>A/A test</strong></td>
+<td>Comparing a system with <em>itself</em>. The right answer is "no difference", so it checks that the tool does not invent differences.</td>
+</tr>
+<tr>
+<td><strong>95% range (confidence interval)</strong></td>
+<td>The range the true difference most likely lies in. If it includes 0, the real difference might be nothing.</td>
+</tr>
+<tr>
+<td><strong>p-value</strong></td>
+<td>How surprising your result would be if nothing had really changed. Small (under 0.05) means surprising, so probably real. Large means it could easily be chance.</td>
+</tr>
+<tr>
+<td><strong>Within noise</strong></td>
+<td>"This test cannot tell whether anything changed." It does <strong>not</strong> mean the two systems are equal.</td>
+</tr>
+<tr>
+<td><strong>Smallest detectable difference</strong></td>
+<td>The smallest gap this test could reliably spot. If you care about a 2-point improvement but this number is 6, your test is too small to find it.</td>
+</tr>
+<tr>
+<td><strong>Flaky item</strong></td>
+<td>A question the model gets right in some runs and wrong in others.</td>
+</tr>
+</tbody></table>
+<h3 id="what-the-verdicts-mean-and-what-to-do">What the verdicts mean, and what to do</h3>
+<table>
+<thead>
+<tr>
+<th>Verdict</th>
+<th>What it means</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>REAL IMPROVEMENT</strong></td>
+<td>B scored higher, and chance alone is an unlikely explanation.</td>
+<td>You can trust the improvement.</td>
+</tr>
+<tr>
+<td><strong>REAL REGRESSION</strong></td>
+<td>B scored lower, and chance alone is an unlikely explanation.</td>
+<td>Do not ship B without investigating.</td>
+</tr>
+<tr>
+<td><strong>WITHIN NOISE</strong></td>
+<td>The test cannot tell. A gap may exist, but it is too small for this test to see.</td>
+<td>Do not claim a win or a loss. Read the advice line: add more <strong>runs</strong> if run-to-run noise dominates, or more <strong>questions</strong> if the question set dominates.</td>
+</tr>
+<tr>
+<td><strong>IDENTICAL RESULTS</strong></td>
+<td>A and B scored exactly the same on every item.</td>
+<td>Check that the setting you changed actually reached the model.</td>
+</tr>
+</tbody></table>
+<h3 id="how-to-use-it-on-your-own-project">How to use it on your own project</h3>
+<ol>
+<li>Run your test <strong>3 to 5 times</strong> per system (more runs for noisier tasks), saving each item's score for each run.</li>
+<li>Run <code>flakeval compare a.jsonl b.jsonl</code>.</li>
+<li>Read the <strong>verdict</strong>, and look at the <strong>smallest detectable difference</strong>. If it is bigger than the improvement you care about, your test is too small to prove it; add questions or runs.</li>
+</ol>
+<p>Want flakeval to run your models for you instead? <code>flakeval init</code> creates a ready-to-edit settings file (<a href="#use-it-with-your-own-models-and-data">details</a>).</p>
+<p>An example (simulated data, where system B is truly about 2 points better than A, with 200 items and 5 runs each):</p>
+<pre><code>$ flakeval compare a.jsonl b.jsonl
+A: 0.6800 (5 runs)   B: 0.6860 (5 runs)   items: 200
+delta (B - A): +0.0060   95% CI: [-0.0310, +0.0430]   p = 0.7955
+smallest reliably detectable difference: ~0.0535
+VERDICT: WITHIN NOISE
+Most uncertainty is run-to-run noise (100%). Running each item more times will tighten the interval. ...
+</code></pre>
+<p>Reading it: B scored 0.6 points higher, but the true difference could be anywhere from 3.1 points worse to 4.3 points better. This test could only reliably spot gaps of about 5 points, so the 2-point improvement is invisible to it.</p>
+<hr>
+<h2 id="quick-start">Quick start</h2>
+<p>Requires Python 3.10+. Pick the route that fits:</p>
+<ul>
+<li><strong>Option 1: install from PyPI</strong> to test your own models, prompts and data. This is what most people want.</li>
+<li><strong>Option 2: clone the repository</strong> to run the tests, the simulated demo and the two case studies (these are not part of the PyPI package).</li>
+</ul>
+<h3 id="option-1-install-from-pypi-and-use-it-on-your-own-data">Option 1: install from PyPI and use it on your own data</h3>
+<p><strong>1. Install.</strong></p>
+<pre><code class="language-bash">python -m venv .venv
+
+source .venv/bin/activate            # Linux / macOS
+source .venv/Scripts/activate        # Windows Git Bash
+# .venv\Scripts\Activate.ps1         # Windows PowerShell
+
+pip install flakeval
+flakeval --help                      # lists the commands: report, compare, init
+</code></pre>
+<p><strong>2. Create your settings file.</strong> In the folder where you want to work:</p>
+<pre><code class="language-bash">flakeval init                        # creates my_eval.py (your settings) and sample_data.csv
+</code></pre>
+<p><code>my_eval.py</code> holds only your settings, about 100 lines, mostly comments. The code that loads your data, calls the models, scores the answers and writes the report lives in the package, so a new release reaches you with <code>pip install -U flakeval</code> and you never copy code into your file. <code>flakeval init</code> never overwrites an existing file.</p>
+<p><strong>3. Put your data in a CSV</strong> (or JSONL), one row per question: an id, the text to send to the model, and the answer you expect. For example <code>tickets.csv</code>:</p>
+<pre><code class="language-csv">id,ticket,label
+1,I was charged twice this month,billing
+2,The app crashes when I open settings,bug
+3,How do I export my data?,question
+</code></pre>
+<p><strong>4. Edit the settings.</strong> Open <code>my_eval.py</code> and change the settings at the top. Here is a worked example for the question <em>"does my new prompt beat my current one?"</em>, using the same model with two different prompts. The first system is the baseline; every other system is compared against it.</p>
+<pre><code class="language-python">DATA_PATH = "tickets.csv"
+INPUT_COLUMN = "ticket"          # the text sent to the model
+EXPECTED_COLUMN = "label"        # the correct answer
+ID_COLUMN = "id"
+SCORER = "exact"                 # the answer must equal the label (ignores case and trailing punctuation)
+
+SYSTEMS = [
+    {
+        "name": "current_prompt",
+        "model": "qwen2.5:3b",
+        "base_url": "http://localhost:11434/v1",   # Ollama; any OpenAI-compatible server works
+        "api_key_env": None,
+        "temperature": 0.7,
+        "system_prompt": "",
+        "prompt_template": "Classify this support ticket as billing, bug or question. Answer with one word.\n\nTicket: {input}",
+    },
+    {
+        "name": "new_prompt",
+        "model": "qwen2.5:3b",
+        "base_url": "http://localhost:11434/v1",
+        "api_key_env": None,
+        "temperature": 0.7,
+        "system_prompt": "",
+        "prompt_template": "You are a support triage assistant. Read the ticket and reply with exactly one label: billing, bug or question.\n\nTicket: {input}",
+    },
+]
+
+RUNS = 5                         # times each question is asked per system (3 to 5 is a good range)
+MAX_TOKENS = 20                  # a one-word answer needs very little room
+</code></pre>
+<p><code>{input}</code> is replaced by the text of the <code>INPUT_COLUMN</code> for each row. To compare two <em>models</em> instead, give the two systems different <code>model</code> values and the same prompt. The other settings, and the full list of built-in scorers (<code>exact</code>, <code>contains</code>, <code>number</code>, <code>choice_letter</code>, <code>answer_line</code>, <code>final_number</code>, or your own function), are explained in <a href="#use-it-with-your-own-models-and-data">Use it with your own models and data</a>.</p>
+<p><strong>5. Check your setup, then run.</strong></p>
+<pre><code class="language-bash">python my_eval.py --dry-run          # asks 2 questions per system, prints each answer and its score; saves nothing
+python my_eval.py                    # the real run: shows the number of model calls and asks before it starts
+</code></pre>
+<p>Read the <code>--dry-run</code> output before the real run: it shows exactly what was sent, what came back and how it was scored, so you can catch a scorer that marks good answers wrong. For a cheap rehearsal of the real run, add <code>--max-items 10 --runs 2 --out-dir trial</code>. The real run asks every question <code>RUNS</code> times for each system, plus a repeat of the baseline as a built-in sanity check (so the example above makes 3 system runs). A progress bar shows how far along it is. If you see <code>Is the server running?</code>, start your model server or check <code>base_url</code>.</p>
+<p><strong>6. Read the result.</strong> The report is printed at the end and saved to <code>my_results/report.txt</code>, next to the scores and the raw model answers (<code>&lt;system&gt;.outputs.jsonl</code>). Each comparison ends with a verdict: <code>REAL IMPROVEMENT</code>, <code>REAL REGRESSION</code>, <code>WITHIN NOISE</code> ("this test cannot tell"), or <code>IDENTICAL RESULTS</code>. A small test set often returns <code>WITHIN NOISE</code> even when one prompt is truly better; the report's "smallest reliably detectable difference" tells you how big the gap must be before the test can see it, and whether more runs or more questions would help. <a href="#flakeval-in-plain-english">Flakeval in plain English</a> explains how to read every line. If you fix your scorer, <code>python my_eval.py --rescore</code> re-marks the saved answers without calling any model.</p>
+<p><strong>Variations</strong></p>
+<ul>
+<li><p><strong>A hosted model</strong> (any OpenAI-compatible API): use the provider's address, and put the <em>name</em> of the environment variable that holds your key in <code>api_key_env</code>. Never paste the key into the file.</p>
+<pre><code class="language-python">{
+    "name": "hosted_model",
+    "model": "the-model-name-your-provider-gives-you",
+    "base_url": "https://api.your-provider.com/v1",   # from your provider's documentation
+    "api_key_env": "MY_API_KEY",
+    "temperature": 0.7,
+    "system_prompt": "",
+    "prompt_template": "{input}",
+},
+</code></pre>
+<pre><code class="language-bash">export MY_API_KEY="..."              # Linux / macOS / Git Bash
+# $env:MY_API_KEY = "..."            # Windows PowerShell
+</code></pre>
+<p>Set <code>WORKERS = 8</code> to send requests in parallel, and start with <code>--max-items 10 --runs 2</code> so you can check the cost first. flakeval prints the number of calls and asks before spending anything. For a model that is not behind an OpenAI-compatible API, a system can instead use your own Python function (<code>"call": my_function</code>); the settings file contains a worked example.</p>
+</li>
+<li><p><strong>No settings file, only Python:</strong></p>
+<pre><code class="language-python">from flakeval.study import default_config, run_study
+
+cfg = default_config()
+cfg.update(
+    data_path="tickets.csv", input_column="ticket", expected_column="label", id_column="id",
+    scorer="exact", runs=5, max_tokens=20,
+    systems=[
+        {"name": "current", "model": "qwen2.5:3b", "base_url": "http://localhost:11434/v1",
+         "prompt_template": "Classify this support ticket as billing, bug or question. Answer with one word.\n\nTicket: {input}"},
+        {"name": "new", "model": "qwen2.5:3b", "base_url": "http://localhost:11434/v1",
+         "prompt_template": "You are a support triage assistant. Reply with exactly one label: billing, bug or question.\n\nTicket: {input}"},
+    ],
+)
+run_study(cfg)                       # asks for confirmation first; run_study(cfg, yes=True) skips it
+</code></pre>
+</li>
+<li><p><strong>You already have scores from your own eval harness:</strong> write one JSON line per question per run, then compare two files. Use at least 3 runs per question, and the same ids in both files.</p>
+<pre><code class="language-json">{"item_id": "q17", "run": 2, "score": 1.0}
+</code></pre>
+<pre><code class="language-bash">flakeval report a.jsonl              # how noisy is one system?
+flakeval compare a.jsonl b.jsonl     # is B really different from A?
+</code></pre>
+<p>See <a href="#use-it-on-your-own-evals">Use it on your own evals</a> for details.</p>
+</li>
+</ul>
+<h3 id="option-2-clone-the-repository-tests-demo-case-studies">Option 2: clone the repository (tests, demo, case studies)</h3>
+<pre><code class="language-bash">git clone https://github.com/AnchitGupta22/flakeval &amp;&amp; cd flakeval
+python -m venv .venv
+
+source .venv/bin/activate            # Linux / macOS
+source .venv/Scripts/activate        # Windows Git Bash
+# .venv\Scripts\Activate.ps1         # Windows PowerShell
+
+pip install -e ".[dev,examples]"
+python -m pytest                     # all tests should pass
+</code></pre>
+<p>Try it on simulated data (no GPU, no downloads):</p>
+<pre><code class="language-bash">cd examples
+python make_demo.py                  # writes a.jsonl and b.jsonl
+flakeval report a.jsonl
+flakeval compare a.jsonl b.jsonl
+</code></pre>
+<p>The two case studies (ARC and GSM8K) are in <code>examples/template_case_studies/</code>; see <a href="#run-the-two-case-studies-through-the-template">The two case studies, as template settings files</a>.</p>
+<p>If <code>flakeval</code> is not found, call it through Python instead: <code>python -m flakeval.cli compare a.jsonl b.jsonl</code>.</p>
+<hr>
+<p><a id="use-it-with-your-own-models-and-data"></a></p>
+<h2 id="use-it-with-your-own-models-and-data-the-template">Use it with your own models and data (the template)</h2>
+<p>You do not need to write code to test your own data. Create a settings file, fill in a few settings, and run it.</p>
+<pre><code class="language-bash">flakeval init                  # creates my_eval.py (your settings file) and sample_data.csv in this folder
+python my_eval.py --dry-run    # tries 2 questions per system and prints what happened; saves nothing
+python my_eval.py              # the real run (shows the number of model calls and asks first)
+</code></pre>
+<p><code>flakeval init</code> works from a plain <code>pip install</code>, with nothing to download from GitHub. It never overwrites an existing file (use another name for a second evaluation: <code>flakeval init other_eval.py</code>).</p>
+<p><strong>How the pieces fit together.</strong> <code>my_eval.py</code> holds only <em>your settings</em> (about 100 lines, mostly comments). The machinery that loads your data, calls the models, scores the answers, shows the progress bar and writes the report lives in the package as <code>flakeval.study</code>. That means a fix or improvement reaches you with <code>pip install -U flakeval</code>, and you never have to copy new code into your file. If you prefer to stay in Python code instead of a settings file:</p>
+<pre><code class="language-python">from flakeval.study import default_config, run_study
+
+cfg = default_config()
+cfg.update(data_path="my_questions.csv", input_column="question", expected_column="answer",
+           systems=[{"name": "a", "model": "qwen2.5:3b", "base_url": "http://localhost:11434/v1"},
+                    {"name": "b", "model": "llama3.2:3b", "base_url": "http://localhost:11434/v1"}])
+run_study(cfg)               # asks for confirmation first; run_study(cfg, yes=True) to skip
+</code></pre>
+<p><strong>What you fill in</strong> (all in one block at the top of the file):</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>What to put there</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DATA_PATH</code></td>
+<td>Path to your <code>.csv</code> (with a header row) or <code>.jsonl</code> file</td>
+</tr>
+<tr>
+<td><code>INPUT_COLUMN</code></td>
+<td>The column with the text sent to the model</td>
+</tr>
+<tr>
+<td><code>EXPECTED_COLUMN</code></td>
+<td>The column with the correct answer (or <code>None</code> if your scorer does not need one)</td>
+</tr>
+<tr>
+<td><code>ID_COLUMN</code></td>
+<td>A unique id per row (or <code>None</code> to use the row number)</td>
+</tr>
+<tr>
+<td><code>MAX_ITEMS</code></td>
+<td>Use only a random subset of this many rows (<code>None</code> = all). Aim for 100 or more if you can.</td>
+</tr>
+<tr>
+<td><code>SCORER</code></td>
+<td>How to mark an answer: one of the built-in scorers below, or <code>"custom"</code> (your own small function)</td>
+</tr>
+<tr>
+<td><code>SYSTEMS</code></td>
+<td>The things you are comparing. The <strong>first is the baseline</strong>. Each has a name, a model, an endpoint, a temperature and a prompt.</td>
+</tr>
+<tr>
+<td><code>RUNS</code></td>
+<td>How many times each question is asked per system (3 to 5 is a good range)</td>
+</tr>
+</tbody></table>
+<p><strong>Built-in scorers</strong> (each gives 1 for a good answer and 0 for a bad one):</p>
+<table>
+<thead>
+<tr>
+<th><code>SCORER</code></th>
+<th>An answer counts as correct when...</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>"exact"</code></td>
+<td>it equals the expected text (ignoring case, spaces and trailing punctuation)</td>
+</tr>
+<tr>
+<td><code>"contains"</code></td>
+<td>the expected text appears somewhere in it</td>
+</tr>
+<tr>
+<td><code>"number"</code></td>
+<td>the <strong>last</strong> number in it equals the expected number</td>
+</tr>
+<tr>
+<td><code>"choice_letter"</code></td>
+<td>multiple choice: the <strong>first</strong> standalone capital letter A-H in it is the expected letter</td>
+</tr>
+<tr>
+<td><code>"answer_line"</code></td>
+<td>math, strict: the number after the last <code>Answer:</code> in it equals the expected number</td>
+</tr>
+<tr>
+<td><code>"final_number"</code></td>
+<td>math, lenient: like <code>answer_line</code>, but also accepts <code>\boxed{...}</code> and then the last number</td>
+</tr>
+<tr>
+<td><code>"custom"</code></td>
+<td>your own function <code>custom_score(output, expected, row)</code> returns it (anything from 0 to 1)</td>
+</tr>
+</tbody></table>
+<p>A misspelled scorer name stops the run immediately and lists the valid ones, before any model is called.</p>
+<p><strong>Try something small without editing the file.</strong> Every settings file understands these command-line overrides:
+<code>--max-items 10</code> (a random subset), <code>--runs 2</code>, <code>--workers 4</code>, <code>--out-dir results_trial</code>, and <code>--scorer NAME</code>.
+For example, <code>python my_eval.py --max-items 10 --runs 2 --out-dir trial</code> is a cheap rehearsal of the real run.</p>
+<p>A data file can be as simple as this:</p>
+<pre><code class="language-csv">id,question,answer
+1,What is the capital of France? Answer in one word.,Paris
+2,What is 7 times 8? Answer with just the number.,56
+</code></pre>
+<p><strong>Comparing two prompts on the same model</strong> is just two systems with the same <code>model</code> and different <code>prompt_template</code>
+(<code>{input}</code> stands for the question):</p>
+<pre><code class="language-python">SYSTEMS = [
+    {"name": "current_prompt", "model": "qwen2.5:3b", "base_url": "http://localhost:11434/v1",
+     "api_key_env": None, "temperature": 0.7, "system_prompt": "", "prompt_template": "{input}"},
+    {"name": "new_prompt", "model": "qwen2.5:3b", "base_url": "http://localhost:11434/v1",
+     "api_key_env": None, "temperature": 0.7, "system_prompt": "",
+     "prompt_template": "{input}\n\nDouble-check your work before answering."},
+]
+</code></pre>
+<p><strong>Which models can it talk to?</strong></p>
+<ul>
+<li>Anything with an <strong>OpenAI-compatible chat endpoint</strong>: local servers such as Ollama, LM Studio and vLLM, and many hosted providers. Fill in <code>base_url</code> and <code>model</code>, and for hosted services put the <strong>name</strong> of the environment variable that holds your API key in <code>api_key_env</code> (set it in your terminal first; never paste a key into the file).</li>
+<li><strong>Anything else</strong> (another company's SDK, a model loaded in Python, your own pipeline): write a short function that takes the prompt and returns the answer as text, and give it to a system as <code>"call": my_function</code>. The template contains a worked example.</li>
+</ul>
+<p><strong>What you see while it runs:</strong> one progress bar for the whole run, counting model calls, with the system currently running next to it and an estimated time left:</p>
+<pre><code>[████████░░░░░░░░░░░░]  41%  740/1800 calls | model_b (system 2/3) 140/600 | elapsed 0:11:02 | ETA ~0:15:40
+</code></pre>
+<p>The estimate is rough, because systems can run at different speeds. When a system finishes, its average score is printed above the bar. If the output goes to a file or pipe (for example <code>| tee run.log</code>), it prints a plain line every 10% instead, so the log stays readable.</p>
+<p><strong>What you get:</strong> a printed report and a <code>my_results/</code> folder with the scores for each system, the raw model answers (handy for checking that your scorer is fair), and <code>report.txt</code>. With <code>RUN_A_A_TEST = True</code> (the default) the baseline is also run a second time, so you can see how much two identical runs differ by pure chance. That number is the yardstick for judging every other difference.</p>
+<p><strong>Read some raw answers before you trust the numbers.</strong> A scorer can mark good answers wrong, and that looks exactly like model noise. In our own test, a correct answer written as <code>H₂O</code> was marked wrong against the expected <code>H2O</code>, which made one question look "flaky". Open <code>my_results/&lt;system&gt;.outputs.jsonl</code> and look at a few answers that scored 0. The built-in scorers already treat look-alike characters (such as <code>₂</code> and <code>2</code>) as equal. If you fix or change your scorer, you do not need to ask the model again: <code>python my_eval.py --rescore</code> re-marks the saved answers and rebuilds the report without calling any model (it needs <code>SAVE_OUTPUTS = True</code>, the default, and the same data and system names as the original run).</p>
+<p><strong>Your data stays yours.</strong> <code>flakeval</code> never uploads anything. Your rows go only to the endpoints you list. With a local model, nothing leaves your computer. If the data is confidential, add <code>my_results/</code> to <code>.gitignore</code>, because the saved raw answers can contain it.</p>
+<p><strong>Cost safety.</strong> Before the real run the script prints the total number of model calls (questions x runs x systems) and asks you to confirm. It skips systems whose result file already exists, so rerunning never repeats paid calls, and it stops with a clear error instead of recording fake zeros if the server fails. Start with a small <code>MAX_ITEMS</code> if you pay per call.</p>
+<p><strong>No single correct answer</strong> (summaries, chat replies)? Use <code>SCORER = "custom"</code> and write a function that returns a number from 0 to 1. Be aware that if the score comes from another AI model acting as a judge, that judge adds its own randomness, which this version of <code>flakeval</code> does not model separately (see Limitations).</p>
+<hr>
+<p><a id="run-the-two-case-studies-through-the-template"></a></p>
+<h2 id="the-two-case-studies-as-template-settings-files">The two case studies, as template settings files</h2>
+<p>The two case studies ship as ordinary settings files, in the same format that <code>flakeval init</code> gives you. Read them as worked examples of adapting the template to a real dataset: each is about 60 lines, imports only <code>flakeval.study</code>, and uses a built-in scorer. What you see is exactly what you would write for your own data.</p>
+<p><strong>What they test.</strong> Single-letter multiple-choice answers from a confident model tend to be very stable, so the first study barely exercises the tool: it shows flakeval staying quiet when nothing changed and flagging a large gap. Real applications produce long, free-form answers, which is where run-to-run noise matters, so the second study uses step-by-step reasoning.
+Each study makes three comparisons: the same system twice (the A/A check), two different models, and a subtle change (a low temperature for ARC, a one-sentence prompt tweak for GSM8K).</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>arc_eval.py</code> (case study 1)</th>
+<th><code>gsm8k_eval.py</code> (case study 2)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Questions</td>
+<td>200 <a href="https://huggingface.co/datasets/allenai/ai2_arc">ARC-Challenge</a> science multiple-choice questions</td>
+<td>200 <a href="https://huggingface.co/datasets/openai/gsm8k">GSM8K</a> math word problems</td>
+</tr>
+<tr>
+<td>Systems compared</td>
+<td><code>qwen2.5:3b</code> (temperature 1.0) vs <code>llama3.2:3b</code> vs <code>qwen2.5:3b</code> at temperature 0.3, plus the A/A check</td>
+<td><code>qwen2.5:3b</code> vs <code>llama3.2:3b</code> vs <code>qwen2.5:3b</code> with the "double-check" prompt, plus the A/A check</td>
+</tr>
+<tr>
+<td>Runs per question</td>
+<td>5</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Longest answer</td>
+<td>16 tokens</td>
+<td>800 tokens</td>
+</tr>
+<tr>
+<td>Model calls</td>
+<td>4,000</td>
+<td>2,400</td>
+</tr>
+<tr>
+<td><code>SCORER</code></td>
+<td><code>"choice_letter"</code></td>
+<td><code>"answer_line"</code> (strict) or <code>"final_number"</code> (lenient)</td>
+</tr>
+<tr>
+<td>Results folder</td>
+<td><code>results_template_arc/</code></td>
+<td><code>results_template_gsm8k_strict/</code> and <code>results_template_gsm8k_lenient/</code></td>
+</tr>
+</tbody></table>
+<p><strong>Requirements.</strong> <a href="https://ollama.com">Ollama</a> installed and running, with the two models pulled
+(<code>ollama pull qwen2.5:3b</code> and <code>ollama pull llama3.2:3b</code>), and <code>pip install -e ".[examples]"</code> (adds the <code>datasets</code> package, used only to export the questions). A GPU with 8 GB of memory is enough for these 3B models (developed on an RTX 4060 laptop GPU); CPU-only works but is slow. The export needs internet once.</p>
+<p><strong>Run them.</strong></p>
+<pre><code class="language-bash">python examples/template_case_studies/prepare_data.py            # once: exports the questions as CSV files
+python examples/template_case_studies/gsm8k_eval.py --dry-run    # check the setup: 2 questions per system, nothing saved
+python examples/template_case_studies/gsm8k_eval.py              # case study 2: math word problems (reasoning)
+python examples/template_case_studies/arc_eval.py                # case study 1: science multiple choice
+</code></pre>
+<p>For a quick trial of either, add <code>--max-items 10 --runs 2 --out-dir results_trial</code>. You get the same progress bar, A/A check and report as any settings file, plus <code>--rescore</code>, and resuming after an interruption (finished systems are skipped).
+On the laptop GPU above, the ARC study (4,000 calls) took about 2 h 30 min and the GSM8K study (2,400 calls) about 3 h 11 min.</p>
+<p><strong>What keeps the comparison fair.</strong> Every system sees the same questions (<code>ITEM_SEED</code> fixes the subset). Each question and each run gets its own random seed, so repeated runs genuinely differ, and the A/A check uses a different base seed from the baseline. Delete a results folder whenever you change a setting: finished systems are skipped on a rerun, so old and new results would otherwise mix. Rerunning the ARC study on the same machine reproduced every number exactly. Long answers are less simple: on GSM8K the server's answer to a question depended on request history (see "Checking the surprising GSM8K result" below), so exact reproduction needs the same request order, which the study keeps.</p>
+<p><strong>What changes between the small sample file and a large dataset?</strong> Only the settings at the top of the file: the data path and columns, the scorer, the list of systems, the number of runs, and the longest answer allowed. A bigger dataset needs no other change. For hosted APIs, <code>--workers 8</code> sends requests in parallel, and <code>--max-items</code> lets you start small and check the cost first.</p>
+<p><strong>Strict vs lenient scoring on GSM8K.</strong> The strict scorer (<code>"answer_line"</code>) only accepts a final line <code>Answer: &lt;number&gt;</code>. Small models often write the same answer as <code>\boxed{13}</code>, <code>**$140**</code>, or "Therefore, Tom has 91 trees left", which strict scoring marks wrong. That measures instruction-following rather than arithmetic, so we report both. The lenient scorer (<code>"final_number"</code>) takes the answer from, in order, an <code>Answer:</code> line, the last <code>\boxed{}</code>, or the last number in the reply.
+Its last-number rule is a heuristic and can occasionally pick the wrong number. Run once, then re-mark the saved answers without calling any model:</p>
+<pre><code class="language-bash">python examples/template_case_studies/gsm8k_eval.py --out-dir results_template_gsm8k_strict      # the run, marked strictly
+cp -r results_template_gsm8k_strict results_template_gsm8k_lenient                                # copy the saved answers
+python examples/template_case_studies/gsm8k_eval.py --scorer final_number --rescore --out-dir results_template_gsm8k_lenient
+</code></pre>
+<p>Each folder's <code>report.txt</code> then holds the report for its own scoring rule, and the raw answers in both are identical.</p>
+<p>Re-marking never changes the raw answers, only how they are scored, and it also re-marks extra repeats added by <code>noise_diagnostics.py replicate</code>.</p>
+<hr>
+<h2 id="results">Results</h2>
+<p>Hardware: RTX 4060 laptop GPU (8 GB), Ollama, models <code>qwen2.5:3b</code> and <code>llama3.2:3b</code>. Every number below comes from running <code>arc_eval.py</code> and <code>gsm8k_eval.py</code> as shipped (see the previous section), plus the five extra repeats and checks of <code>noise_diagnostics.py</code> described below.</p>
+<p>How to read the tables: <em>Delta</em> is B minus A with a 95% range. A difference is called real only if the range excludes zero <strong>and</strong> p &lt; 0.05. <em>Smallest detectable</em> is the smallest gap this eval could reliably (80% power) detect for that particular pair. It is small when two systems behave almost identically item by item and larger when they differ, so it varies between rows. <em>Strict</em> scoring requires a final <code>Answer: &lt;number&gt;</code> line; <em>lenient</em> scoring also accepts <code>\boxed{}</code> answers and the last number in the reply (see "Strict vs lenient scoring on GSM8K" above).</p>
+<h3 id="case-study-1-arc-challenge-single-letter-answers-200-items-x-5-runs-temperature-10">Case study 1: ARC-Challenge, single-letter answers (200 items x 5 runs, temperature 1.0)</h3>
+<table>
+<thead>
+<tr>
+<th>Comparison</th>
+<th>Mean A</th>
+<th>Mean B</th>
+<th>Delta (B - A)</th>
+<th>95% CI</th>
+<th>p</th>
+<th>Smallest detectable</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. qwen2.5:3b vs itself (A/A)</td>
+<td>0.826</td>
+<td>0.829</td>
+<td>+0.003</td>
+<td>[-0.001, +0.008]</td>
+<td>0.385</td>
+<td>0.006</td>
+<td>Within noise</td>
+</tr>
+<tr>
+<td>2. qwen2.5:3b vs llama3.2:3b</td>
+<td>0.826</td>
+<td>0.709</td>
+<td>-0.117</td>
+<td>[-0.169, -0.064]</td>
+<td>&lt;0.001</td>
+<td>0.075</td>
+<td>Real (B lower)</td>
+</tr>
+<tr>
+<td>3. temperature 1.0 vs 0.3</td>
+<td>0.826</td>
+<td>0.825</td>
+<td>-0.001</td>
+<td>[-0.003, +0.000]</td>
+<td>1.000</td>
+<td>0.003</td>
+<td>Within noise</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Items that changed score across the 5 runs of <code>qwen2.5:3b</code>: 1 of 200 (0.5%). At temperature 0.3 no item changed score.</li>
+<li>Compute: 4,000 model calls in 2 h 30 min (about 37 minutes per system, 2.2 s per call).</li>
+</ul>
+<h3 id="case-study-2-gsm8k-reasoning-200-items-x-3-runs-temperature-07">Case study 2: GSM8K reasoning (200 items x 3 runs, temperature 0.7)</h3>
+<p>Strict scoring (<code>Answer: &lt;number&gt;</code> line required):</p>
+<table>
+<thead>
+<tr>
+<th>Comparison</th>
+<th>Mean A</th>
+<th>Mean B</th>
+<th>Delta (B - A)</th>
+<th>95% CI</th>
+<th>p</th>
+<th>Smallest detectable</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. qwen2.5:3b vs itself (A/A)</td>
+<td>0.745</td>
+<td>0.697</td>
+<td>-0.048</td>
+<td>[-0.088, -0.008]</td>
+<td>0.024</td>
+<td>0.058</td>
+<td>Real (B lower)</td>
+</tr>
+<tr>
+<td>2. qwen2.5:3b vs llama3.2:3b</td>
+<td>0.745</td>
+<td>0.753</td>
+<td>+0.008</td>
+<td>[-0.033, +0.052]</td>
+<td>0.760</td>
+<td>0.061</td>
+<td>Within noise</td>
+</tr>
+<tr>
+<td>3. base prompt vs "double-check"</td>
+<td>0.745</td>
+<td>0.698</td>
+<td>-0.047</td>
+<td>[-0.083, -0.010]</td>
+<td>0.015</td>
+<td>0.052</td>
+<td>Real (B lower)</td>
+</tr>
+</tbody></table>
+<p>Lenient scoring:</p>
+<table>
+<thead>
+<tr>
+<th>Comparison</th>
+<th>Mean A</th>
+<th>Mean B</th>
+<th>Delta (B - A)</th>
+<th>95% CI</th>
+<th>p</th>
+<th>Smallest detectable</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. qwen2.5:3b vs itself (A/A)</td>
+<td>0.798</td>
+<td>0.772</td>
+<td>-0.027</td>
+<td>[-0.060, +0.007]</td>
+<td>0.149</td>
+<td>0.048</td>
+<td>Within noise</td>
+</tr>
+<tr>
+<td>2. qwen2.5:3b vs llama3.2:3b</td>
+<td>0.798</td>
+<td>0.762</td>
+<td>-0.037</td>
+<td>[-0.075, +0.003]</td>
+<td>0.086</td>
+<td>0.057</td>
+<td>Within noise</td>
+</tr>
+<tr>
+<td>3. base prompt vs "double-check"</td>
+<td>0.798</td>
+<td>0.792</td>
+<td>-0.007</td>
+<td>[-0.035, +0.023]</td>
+<td>0.735</td>
+<td>0.042</td>
+<td>Within noise</td>
+</tr>
+</tbody></table>
+<p>Mean score of each system under the two scoring rules:</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Strict</th>
+<th>Lenient</th>
+<th>Gain from lenient scoring</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>qwen2.5:3b, base prompt (baseline)</td>
+<td>0.745</td>
+<td>0.798</td>
+<td>+0.053</td>
+</tr>
+<tr>
+<td>qwen2.5:3b, base prompt, repeated (A/A)</td>
+<td>0.697</td>
+<td>0.772</td>
+<td>+0.075</td>
+</tr>
+<tr>
+<td>llama3.2:3b, base prompt</td>
+<td>0.753</td>
+<td>0.762</td>
+<td>+0.009</td>
+</tr>
+<tr>
+<td>qwen2.5:3b, "double-check" prompt</td>
+<td>0.698</td>
+<td>0.792</td>
+<td>+0.094</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Items that changed score across the 3 runs of <code>qwen2.5:3b</code> (baseline): 65 of 200 (32.5%) under strict scoring, 43 of 200 (21.5%) under lenient scoring.</li>
+<li>Compute: 2,400 model calls in 3 h 11 min (40 to 51 minutes per system, about 4.8 s per call); the five extra repeats took another 3 h 18 min.</li>
+</ul>
+<h3 id="checking-the-surprising-gsm8k-result">Checking the surprising GSM8K result</h3>
+<p>Under strict scoring the same-system check came out as a "real regression" (74.5% vs 69.7%, p = 0.024). Before trusting or dismissing that, we ran the same configuration five more times with different seeds (2,400 more model calls, 3 h 18 min) and ran the checks in <code>examples/template_case_studies/noise_diagnostics.py</code>.</p>
+<table>
+<thead>
+<tr>
+<th>System (same model, same prompt)</th>
+<th>Strict</th>
+<th>Lenient</th>
+<th>Replies without an <code>Answer:</code> line</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>qwen2.5:3b</code>, baseline</td>
+<td>0.745</td>
+<td>0.798</td>
+<td>45 (7.5%)</td>
+</tr>
+<tr>
+<td>repeat 1 (the original A/A system)</td>
+<td>0.697</td>
+<td>0.772</td>
+<td>68 (11.3%)</td>
+</tr>
+<tr>
+<td>repeat 2</td>
+<td>0.725</td>
+<td>0.798</td>
+<td>60 (10.0%)</td>
+</tr>
+<tr>
+<td>repeat 3</td>
+<td>0.707</td>
+<td>0.790</td>
+<td>67 (11.2%)</td>
+</tr>
+<tr>
+<td>repeat 4</td>
+<td>0.740</td>
+<td>0.792</td>
+<td>50 (8.3%)</td>
+</tr>
+<tr>
+<td>repeat 5</td>
+<td>0.715</td>
+<td>0.793</td>
+<td>65 (10.8%)</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>How far apart can identical systems land?</strong> Under strict scoring the six scores range from 69.7% to 74.5% (SD 1.9 points); 5 of the 15 pairs differ by 3 points or more and 2 by more than 4. The original A/A pair is the two most extreme systems of the six. Under lenient scoring the range is 77.2% to 79.8% (SD 1.0 point), and no pair differs by 3 points.</li>
+<li><strong>Are runs interchangeable, as flakeval's tests assume?</strong> An exact shuffle test (each question's results shuffled across runs) finds no evidence against it: p = 0.063 (strict) and 0.266 (lenient) for the spread of the 18 run accuracies, p = 0.351 and 0.711 for differences between the six systems. Runs of the same system do not agree more with each other than with runs of other systems (p = 0.438 and 0.756), which also argues against related seeds causing a problem.</li>
+<li><strong>Is flakeval over-confident on data like this?</strong> Where nothing can be going on (each question's runs shuffled), it flagged 5.1% (strict) and 3.8% (lenient) of random same-configuration comparisons, close to the nominal 5%. An independent permutation test reproduced flakeval's p-values (for example 0.018 against 0.023 for the original pair).</li>
+<li><strong>Formatting.</strong> About 45% of the original strict gap was formatting. Replies without an <code>Answer:</code> line ranged from 7.5% to 11.3% across the six systems, which is about what chance produces (p of roughly 0.13).</li>
+<li><strong>The server.</strong> Re-asking 60 saved answers with the same seeds in random order returned the same text for only 25 of them (run 0: 20 of 21, run 1: 4 of 19, run 2: 1 of 20). Replaying each question's runs back to back in the original order returned 57 of 60 (the three that differed were all run 0). So on this setup an answer depends on request history, probably a reused prompt cache, not on hidden randomness. Fresh answers (run 0) and cached answers (runs 1 and 2) scored the same on average across eight systems: 72.3% and 72.2% strict, 79.1% and 78.5% lenient.</li>
+</ul>
+<p>Taken together, the original flag is consistent with chance: the baseline landed at the top and the first repeat at the bottom of a natural spread of about 5 points under strict scoring. This shows the data are consistent with flakeval's assumptions; it cannot prove that no small systematic effect exists.</p>
+<h3 id="what-the-results-show">What the results show</h3>
+<p>Everything below is read off the tables above; nothing here is generated, so update it if you rerun the study.</p>
+<ol>
+<li><strong>On ARC the tool behaves as it should.</strong> The same model twice scored 82.6% and 82.9% (p = 0.385, within noise). <code>llama3.2:3b</code> scored 11.7 points below <code>qwen2.5:3b</code> (95% range -16.9 to -6.4, p &lt; 0.001), well above the 7.5 points this test could reliably detect. Lowering the temperature changed one answer, so there was nothing to detect.</li>
+<li><strong>On GSM8K, identical systems can differ by several points.</strong> Six runs of the same configuration scored between 69.7% and 74.5% under strict scoring and between 77.2% and 79.8% under lenient scoring. The original same-system check, which flakeval flagged under strict scoring (-4.8 points, p = 0.024), happened to be the two most extreme of the six, and the extra repeats and diagnostics found nothing beyond chance.</li>
+<li><strong>A "significant" prompt result has to be read against that spread.</strong> The "double-check" prompt scored 4.7 points below the baseline under strict scoring (p = 0.015), but its scores (69.8% strict, 79.2% lenient) fall inside the range of the six identical systems (69.7% to 74.5% and 77.2% to 79.8%). Under lenient scoring the difference is 0.7 points (p = 0.735). We cannot say whether the tweak helps or hurts.</li>
+<li><strong>The scoring rule changes scores unevenly.</strong> Lenient scoring raised the four original systems' scores by between 0.9 points (llama) and 9.4 points ("double-check"), so strict scoring partly measures whether the model writes an <code>Answer:</code> line, and that varies from run to run. qwen vs llama is within noise under both rules (+0.8 points strict, -3.7 points lenient, p = 0.086).</li>
+<li><strong>Reasoning tasks are far noisier than single-letter answers.</strong> 32.5% of GSM8K items (21.5% under lenient scoring) changed score across only 3 runs, against 0.5% of ARC items across 5 runs. At 200 questions and 3 runs this test could only reliably detect differences of about 4 to 6 points on GSM8K.</li>
+<li><strong>Exact reproduction of long answers depends on request order.</strong> ARC reproduced every number exactly on a rerun. On GSM8K, the server's answers depended on request history, so a study can only be replayed faithfully in the same order.</li>
+</ol>
+<h3 id="what-this-means-in-plain-words">What this means, in plain words</h3>
+<p>We tested two small AI models on two kinds of questions: <strong>multiple-choice science questions (ARC)</strong> and <strong>math word problems that need step-by-step thinking (GSM8K)</strong>. We wanted to know whether <code>flakeval</code> can tell a real difference from random wobble. Here is what happened.</p>
+<ul>
+<li><strong>On the science questions it worked cleanly.</strong> The same model run twice scored 82.6% and 82.9%, and <code>flakeval</code> called that "no real difference". When we compared two different models, <code>qwen</code> scored 82.6% and <code>llama</code> 70.9%, a gap of almost 12 points, and <code>flakeval</code> called it real.</li>
+<li><strong>On the math problems, the safety check looked alarming at first.</strong> With strict grading, running the <em>same</em> model twice gave 74.5% and 69.7%, and <code>flakeval</code> called that a "real" drop. A result like that deserves suspicion, so we investigated: we ran the same setup five more times, and the six results ranged from 69.7% to 74.5%. The first two happened to be the highest and the lowest. It was luck, not a flaw in the tool, and it is a good reminder that two runs can differ by several points when nothing has changed.</li>
+<li><strong>That spread is the yardstick.</strong> The "double-check your arithmetic" tip scored 69.8%, which sits inside the range that six identical setups produced. So even though one comparison looked "significant", we cannot say the tip changed anything.</li>
+<li><strong>How you grade answers changes the picture.</strong> With lenient grading, which accepts a correct answer written in an unusual format, the six identical setups agreed much more closely (77.2% to 79.8%). Strict grading penalised some runs more than others (the "double-check" system lost 9.4 points to formatting, llama only 0.9), so it was partly measuring formatting habits, not math. When you report a score, also report <strong>how you graded it</strong>.</li>
+<li><strong>"Within noise" means "unknown at this test size", not "no effect".</strong> For the math problems, 200 questions with 3 runs could only reliably spot gaps of roughly 4 to 6 points. Anything smaller is invisible without more questions.</li>
+<li><strong>Questions that need thinking wobble much more.</strong> Only 0.5% of the science questions flipped between right and wrong from run to run, but 32.5% of the math questions did. The longer and more open-ended the AI's answer, the more you need repeated runs before trusting a score.</li>
+</ul>
+<p><strong>What to take away for your own project</strong></p>
+<ol>
+<li>A higher or lower score is not proof of anything. Run it several times, and <strong>always include the "same system twice" check</strong>: it tells you how big a gap you can get by chance.</li>
+<li>If a result surprises you, run the same setup a few more times to see its natural spread before drawing conclusions.</li>
+<li>If a verdict is borderline (a p-value between about 0.01 and 0.05), be cautious, especially if the same-system check behaves oddly.</li>
+<li>Look at the "smallest detectable difference" <strong>before</strong> you start. If it is bigger than the improvement you hope for, your test is too small.</li>
+<li>Always say how you scored the answers.</li>
+</ol>
+<p><strong>What these results do not tell you.</strong> They do not show that <code>llama</code> is a worse model than <code>qwen</code>, or that the "double-check prompt does or does not help. We used two small models, one set of questions per study, one setting, and one laptop. Treat them as an example of how to use the method, not as a ranking of models.</p>
+<hr>
+<h2 id="use-it-on-your-own-evals">Use it on your own evals</h2>
+<h3 id="from-existing-results">From existing results</h3>
+<p>Write one JSON line per item per run (<code>correct</code> as a boolean may replace <code>score</code>):</p>
+<pre><code class="language-json">{"item_id": "q17", "run": 2, "score": 1.0}
+</code></pre>
+<pre><code class="language-bash">flakeval report a.jsonl                  # how noisy is one system?
+flakeval compare a.jsonl b.jsonl         # is B really different from A?
+flakeval compare a.jsonl b.jsonl --json  # machine-readable
+</code></pre>
+<p>Use at least 3 runs per item (5 is better), and the same item ids in both files. Items present in only one file are ignored, with a warning. The example output is explained in <a href="#flakeval-in-plain-english">Flakeval in plain English</a>.</p>
+<h3 id="from-python">From Python</h3>
+<pre><code class="language-python">from flakeval import repeat, compare
+
+def eval_model_a(question):      # return a numeric score for one item, e.g. 0/1
+    ...
+
+a = repeat(eval_model_a, items, runs=5, workers=8, save="a.jsonl")   # items: dict {id: input} or a list
+b = repeat(eval_model_b, items, runs=5, workers=8, save="b.jsonl")
+print(compare(a, b))
+</code></pre>
+<p>If your function calls a model with a sampling seed, make the seed <strong>different for every run</strong> (use <code>repeat(..., with_run=True)</code> to receive the run number). A fixed seed makes every run identical and hides the noise this tool is meant to measure.</p>
+<h3 id="as-a-ci-gate">As a CI gate</h3>
+<p><code>flakeval compare</code> exits with code 1 only when B is a statistically real regression versus A.</p>
+<h3 id="if-your-same-system-check-is-flagged">If your same-system check is flagged</h3>
+<p>A flagged "same system twice" check is usually chance (about 1 in 20 at the usual threshold), but it is worth a few minutes to make sure. <code>examples/template_case_studies/noise_diagnostics.py</code> (in a clone of this repository) works with any settings file:</p>
+<pre><code class="language-bash">python examples/template_case_studies/noise_diagnostics.py analyze     --settings my_eval.py --dir my_results --scorers contains
+python examples/template_case_studies/noise_diagnostics.py determinism --settings my_eval.py --dir my_results
+python examples/template_case_studies/noise_diagnostics.py replicate   --settings my_eval.py --dir my_results --extra 4
+</code></pre>
+<p><code>analyze</code> needs no model calls: it re-scores your saved answers and tests whether runs of one configuration are really interchangeable, how often flakeval raises a false alarm on data shaped like yours, and how much of a gap is formatting.</p>
+<p><code>determinism</code> re-asks some saved answers with the same seeds to see whether the server is reproducible. </p>
+<p><code>replicate</code> runs extra repeats of the baseline with new seeds (the strongest evidence, and the slowest); then run <code>analyze</code> again. Pass your own scorer to <code>--scorers</code> (the default is the GSM8K pair, <code>answer_line final_number</code>).</p>
+<hr>
+<h2 id="faq">FAQ</h2>
+<h3 id="isnt-it-all-just-chance-what-is-the-point-of-flakeval">Isn't it all just chance? What is the point of flakeval?</h3>
+<p><code>flakeval</code> cannot remove chance, and nothing can. Two things in an LLM evaluation are random, and neither is a flaw in the tool: the model's answers are random draws (a model picks its words with some randomness, and real users meet that randomness too), and your question set is only a sample of the questions you could have asked. What <code>flakeval</code> does is <strong>measure how much chance is in your result</strong>, the way the margin of error does in an opinion poll. "52% to 48%, give or take 3 points" tells you it is a toss-up; "60% to 40%" tells you it is not.</p>
+<p>That is the difference between believing the wrong thing and the right thing. In our own case studies, a prompt tweak looked 4.7 points worse and "significant", but six identical setups scored anywhere from 69.7% to 74.5%, so the tweak's score fell inside the natural spread and we could not say it did anything. On the other study, a gap of almost 12 points was far above what chance produces, so we could say that one is real. Same tool, two different and correct verdicts.</p>
+<p>You can also <strong>shrink chance</strong>, and <code>flakeval</code> tells you how. The "smallest detectable difference" tells you in advance whether your test can answer your question, and the report says whether more runs or more questions would help more. As a rough rule, halving the smallest detectable difference takes about four times the data.</p>
+<h3 id="why-not-just-set-the-temperature-to-0">Why not just set the temperature to 0?</h3>
+<p>That removes most of the model's own randomness, but not the sampling of your questions, and real users do not run at temperature 0 either. For very confident models the run-to-run noise can be tiny anyway: in our science-question study not one answer changed across five runs at temperature 0.3. For reasoning tasks it is large (about a third of the math questions changed score across just three runs).</p>
+<h3 id="how-many-questions-and-runs-do-i-need">How many questions and runs do I need?</h3>
+<p>There is no fixed number; look at the "smallest detectable difference" in the report. If it is bigger than the improvement you care about, your test is too small. A reasonable start is 100 or more questions and 3 to 5 runs, and the report's advice line says whether more runs or more questions would help more.</p>
+<h3 id="what-can-flakeval-not-catch">What can flakeval not catch?</h3>
+<p>Systematic problems, which need a human reading the raw answers: a scorer that cannot read <code>H₂O</code> and marks a correct answer wrong, a question with no single right answer, or strict grading that rewards formatting more than correctness. Open the <code>.outputs.jsonl</code> file and read a few answers that scored 0 before you trust any numbers, and use <code>--rescore</code> to re-mark saved answers after you fix a scorer.</p>
+<h3 id="why-did-your-own-same-system-check-flag-a-real-difference">Why did your own same-system check flag a "real" difference?</h3>
+<p>By chance, as far as we could tell: it was the two most extreme of six identical setups. See "<a href="#checking-the-surprising-gsm8k-result">Checking the surprising GSM8K result</a>" for the evidence, and "<a href="#if-your-same-system-check-is-flagged">If your same-system check is flagged</a>" for how to check your own.</p>
+<hr>
+<h2 id="how-it-works">How it works</h2>
+<p>Scores form an items x runs matrix. Two sources of noise affect any eval score:</p>
+<ul>
+<li><strong>Run noise:</strong> the same item scores differently across runs.</li>
+<li><strong>Item sampling:</strong> your eval set is a finite sample of all questions you care about.</li>
+</ul>
+<p>Each item's mean score across runs is its value, and comparisons are paired by item id. The 95% interval comes from a bootstrap that resamples <strong>items</strong> (run noise is already inside each item's mean, so also resampling runs would count it twice; an earlier version did this and produced intervals about 25% too wide). The p-value comes from a paired sign-flip permutation test, whose null hypothesis is that A and B are the same system. A verdict of "real" requires both the interval to exclude zero and p &lt; 0.05, which guards against sparse cases where only a few items differ. The share of uncertainty due to run noise is computed from the within-item variance of the runs, so the report can say whether more runs or more items would help. The "smallest detectable difference" is about 2.8 x the standard error (80% power, alpha 0.05).</p>
+<p>Checked by simulation (separate from the case studies above): in simulated evals with 60 items and 5 runs each, two identical systems were called "different" 5.3% of the time (target 5%), and a true 10-point gap was detected 71% of the time.</p>
+<h3 id="a-pitfall-flakeval-guards-against-identical-repeated-runs">A pitfall flakeval guards against: identical "repeated" runs</h3>
+<p>Many model servers use a fixed random seed unless told otherwise (Ollama's default seed is 0), so the same prompt returns the same output every time, even at a high temperature. A naive repeat loop then measures <strong>zero</strong> run-to-run noise and makes any evaluation look far more stable than it is. The template avoids this by sending a different seed for every question and run, and <code>flakeval</code> warns when no item changes score across runs, or reports <code>IDENTICAL RESULTS</code> when A and B score the same on every item. If you write your own loop, do the same, and if you see either message, check that your seed, temperature and model settings actually reach the model.</p>
+<hr>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>Assumes your items are a random sample of the questions you care about.</li>
+<li>Compares two systems at a time; there is no multiple-comparison correction yet.</li>
+<li>Scores are treated as plain numbers; there is no special handling of ordinal rubrics, and when an AI model acts as the judge, the judge's own randomness is not modeled separately.</li>
+<li>The lenient GSM8K parser's last-number rule is a heuristic.</li>
+<li>The p-values assume runs of one configuration are interchangeable. In our GSM8K case study the same-system control was flagged once under strict scoring; five extra repeats and an exact shuffle test found the data consistent with that assumption, so the flag was most likely chance. Still, treat borderline p-values (about 0.01 to 0.05) with caution and always run the same-system control.</li>
+<li>On the server we used, an answer depended on request history (a question asked straight after itself, as the runs of one question are, can be answered differently from a fresh one). It did not change average accuracy in our data, but exact reproduction of long-answer studies needs the same request order.</li>
+<li>The case studies use one benchmark each, two small models, and one hardware setup. Treat their conclusions as an illustration of the method, not as a ranking of the models.</li>
+</ul>
+<hr>
+<h2 id="repository-layout">Repository layout</h2>
+<pre><code class="nohighlight">src/flakeval/                      the installable package (this is the core)
+    stats.py                       the statistics: bootstrap, summaries, paired comparison
+    io.py                          JSONL loading/saving and the repeat() runner
+    cli.py                         the `flakeval` command: report, compare, init
+    study.py                       the engine behind the template: run_study(), rescore_study(), run_cli()
+    scoring.py                     built-in scorers (exact, contains, number, choice_letter, answer_line, final_number)
+    models.py                      talking to a model: per-call seeds, retries, OpenAI-compatible endpoints
+    progress.py                    the progress bar
+    templates/my_eval.py           the settings file that `flakeval init` copies out for you
+    templates/sample_data.csv      12-question starter data, copied out by `flakeval init`
+examples/                          not part of the installed package
+    make_demo.py                   simulated data for a quick try of report / compare
+    template_case_studies/         the two case studies as ordinary settings files (read these as examples)
+        arc_eval.py                case study 1: ARC multiple choice
+        gsm8k_eval.py              case study 2: GSM8K step-by-step reasoning
+        prepare_data.py            exports the case-study questions as CSV files
+        noise_diagnostics.py       checks whether a surprising result is chance: re-scores saved answers, tests run
+                                   interchangeability, re-asks answers, and runs extra repeats
+results_template_*/                written when you run the case studies (JSONL scores, raw answers, report.txt)
+tests/                             pytest suite
+</code></pre>
+<hr>
+<h2 id="roadmap">Roadmap</h2>
+<ul>
+<li><input type="checkbox" data-roadmap-item="importers"> Importers for lm-evaluation-harness, Inspect, and promptfoo outputs</li>
+<li><input type="checkbox" data-roadmap-item="html-report"> HTML report</li>
+<li><input type="checkbox" data-roadmap-item="adaptive-mode"> Adaptive mode: keep sampling until the verdict is decided, to save compute</li>
+<li><input type="checkbox" data-roadmap-item="llm-judge"> LLM-judge variance and multi-system comparisons with correction</li>
+</ul>
+<h2 id="license">License</h2>
+<p><code>flakeval</code> is distributed under the MIT License. See <a href="https://github.com/AnchitGupta22/flakeval/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">LICENSE</a> for the full license text.</p>
+<h2 id="citation-and-attribution">Citation and attribution</h2>
+<p>If <code>flakeval</code> is useful in your research, project, or publication, please consider citing the project so others can discover and acknowledge the work.</p>
+<p>GitHub can use the <a href="https://github.com/AnchitGupta22/flakeval/blob/main/CITATION.cff" target="_blank" rel="noopener noreferrer"><code>CITATION.cff</code></a> file in this repository to display citation information. If you publish a paper or obtain a DOI for a release, update <code>CITATION.cff</code> with the paper or release details.</p>
+<p><strong>Author:</strong> Anchit Gupta</p>
+<p>The MIT License requires preservation of the applicable copyright and license notices when copies or substantial portions of the software are redistributed. Citation in academic publications is encouraged, but is not an additional requirement imposed by the MIT License.</p>
+
+        </div>
+      </article>
+    </section>
+  </main>
+  <a class="portfolio-link" href="./index.html">Back to portfolio</a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+  <script>
+    const roadmapItems = document.querySelectorAll("[data-roadmap-item]");
+
+    roadmapItems.forEach((item) => {
+      const key = `flakeval-roadmap-${item.dataset.roadmapItem}`;
+      item.checked = localStorage.getItem(key) === "completed";
+      item.addEventListener("change", () => {
+        localStorage.setItem(key, item.checked ? "completed" : "pending");
+      });
+    });
+
+    if (window.hljs) {
+      window.hljs.highlightAll();
+    }
+  </script>
+</body>
+
+</html>
